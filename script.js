@@ -13,16 +13,6 @@ d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
     const w = 650 - margin.left - margin.right,
     h = 500 - margin.top - margin.bottom;
 
-    let incomeDomain = d3.extent(coffeeData, function(d) {
-        return d.Income;
-    });
-  //  console.log(incomeDomain[0]);
-    let lifeExpecDomain = d3.extent(coffeeData, function(d) {
-        return d.LifeExpectancy;
-    });
-  //  console.log(lifeExpecDomain[0]);
-
-
   const svg = d3.select(".chart")
                     .append("svg")
                     .attr("width", w + margin.left + margin.right)
@@ -30,32 +20,40 @@ d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
-    const xScale = d3.scaleLinear()
-                        .domain(d3.extent(coffeeData, function(d) {
-                            return d.Income;
-                        }))
-                        .range([0, w]);
+    const xScale = d3.scaleBand()
+                        .domain(coffeeData.map(d=>d.company))
+                        .rangeRound([0, w])
+                        .paddingInner(0.1);
 
-    console.log(xScale(incomeDomain[1]));
+    let coffeeDomain = d3.extent(coffeeData, function(d) {
+                                            return d.stores;
+    });
 
     const yScale = d3.scaleLinear()
-                        .domain(d3.extent(coffeeData, function(d) {
-                            return d.LifeExpectancy;
-                        }))
+                        .domain([0,coffeeDomain[1]])
                         .range([h, 0]);  //reversed because of SVG
 
+    // create axes
+    const xAxis = d3.axisBottom()
+                    .scale(xScale)
 
-    let radiusDomain = d3.extent(coffeeData, function(d) {
-        return d.Population;
-    })
+    const yAxis = d3.axisLeft()
+                    .scale(yScale)
 
-    let aScale = d3.scaleSqrt()  //area Scale
-                    .domain([0, radiusDomain[1]])
-                    .range([3,24]);
-//    console.log(aScale(1369435670));
+    // Draw the axes
+    svg.append("g")
+        .attr("class", "axis x-axis")
+        .attr("transform", `translate(0, ${h})`)
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "axis y-axis")
+ //       .attr("transform", `translate(0, ${h+margin.top/2})`)
+        .call(yAxis);
 
 
-    legendColors = d3.scaleOrdinal(d3.schemeTableau10) // colors for circles
+
+
 
     //create datapoints
     svg.selectAll("circle")
@@ -103,24 +101,6 @@ d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
             d3.select("#tooltip").classed("hidden", true);
         });
 
-    // create axes
-    const xAxis = d3.axisBottom()
-                    .scale(xScale)
-                    .ticks(5, "s")
-
-    const yAxis = d3.axisLeft()
-                    .scale(yScale)
-
-    // Draw the axes
-    svg.append("g")
-        .attr("class", "axis x-axis")
-        .attr("transform", `translate(0, ${h})`)
-        .call(xAxis);
-
-    svg.append("g")
-        .attr("class", "axis y-axis")
- //       .attr("transform", `translate(0, ${h+margin.top/2})`)
-        .call(yAxis);
 
     //axes labels
     svg.append("text")
