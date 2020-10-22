@@ -66,7 +66,7 @@ function update(coffeeData, type, sort){
     bars.enter()
     .append("rect")
     .attr("class", "bar")
-    .attr("x", (d) => xScale(d.company)+0.1) //+0.1 is aesthetic
+    .attr("x", (d) => xScale(d.company)+0.1) //+0.1 is aesthetic, same for y
     .attr("width", xScale.bandwidth())
     .merge(bars)
     .transition()

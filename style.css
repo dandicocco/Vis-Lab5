@@ -1,5 +1,5 @@
 .row {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 /* line styles */
@@ -9,33 +9,14 @@
 	stroke: #333;
 	shape-rendering: crispEdges;
 }
-/* labels */
+label {
+    text-align: right;
+}
+
+/* axis labels */
 .axis text {
 	font-family: sans-serif;
 	font-size: 8px;
-}
-
-#tooltip {
-    position: absolute;
-    width: auto;
-    height: auto;
-    padding: 10px;
-    background-color: black;
-    border-radius: 10px;
-    pointer-events: none;
-    opacity: 80%;
-}
-
-#tooltip.hidden {
-    display: none;
-}
-
-#tooltip p {
-    margin: 0;
-    font-family: sans-serif;
-    font-size: 13px;
-    line-height: 20px;
-    color: white;
 }
 
 .legendLabels {
