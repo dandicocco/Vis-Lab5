@@ -1,5 +1,5 @@
 let coffeeData;
-let type = "stores";
+let type = document.querySelector("#group-by").value;
 let sort = true;
 
 // CHART INIT ------------------------------
@@ -60,17 +60,27 @@ function update(coffeeData, type, sort){
 
 
 	const bars = svg.selectAll('.bar')
-    .data(coffeeData);
-	
+    .data(coffeeData, function (d){
+        return d.company;
+    });
+    
+    bars.exit()
+        .remove();
+
     // Implement the enter-update-exist sequence
+
+
     bars.enter()
     .append("rect")
-    .attr("class", "bar")
-    .attr("x", (d) => xScale(d.company)+0.1) //+0.1 is aesthetic, same for y
-    .attr("width", xScale.bandwidth())
+    .attr("class", "bar")    
     .merge(bars)
     .transition()
+    .delay(function(d,i){
+        return i / coffeeData.length * 1000;
+    })
     .duration(1000)
+    .attr("x", (d) => xScale(d.company)+0.1) //+0.1 is aesthetic, same for y
+    .attr("width", xScale.bandwidth())
     .attr("y", (d) => yScale(d[type])-0.1) // no need to invert because yScale already does, already says where "top" is -> lowered
     .attr("height", (d) => h - yScale(d[type])) //inverted relationship with "y" function b/c of yScale
     .attr("fill", "#f29c38");
